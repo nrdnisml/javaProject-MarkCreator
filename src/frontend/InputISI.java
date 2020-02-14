@@ -1,0 +1,439 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package frontend;
+import javax.swing.DefaultListModel;
+import javax.swing.JPanel;
+import java.sql.*;
+import backend.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author asus
+ */
+public class InputISI extends javax.swing.JFrame {
+    String matakuliah;
+    String subabName;
+    String struktur;
+    int id;
+    int idSubab;
+    int idStruktur;
+    int indexJCbox;
+    int idIsi;
+    String username;
+    String isi;
+    Boolean isiKosong = true;
+    Sqlconnection1841720105Hafidh sqlite = new Sqlconnection1841720105Hafidh();
+    HashMap<Integer, String> Isi = new HashMap<>();
+    
+    
+    public void setInput(int id, String matakuliah, int idSubab, String subab, int indexJCbox, int idStrukur, String struktur, String username){
+        this.id = id;
+        this.matakuliah = matakuliah;
+        this.idSubab = idSubab;
+        this.subabName = subab;
+        this.indexJCbox = indexJCbox;
+        this.idStruktur = idStrukur;
+        this.struktur = struktur;
+        this.username = username;
+    }
+
+    public InputISI() {
+        initComponents();
+        setResizable(false);
+//        setExtendedState(JFrame.MAXIMIZED_HORIZ);
+        setVisible(true);
+        setLocationRelativeTo(null);
+    }
+    
+    public void getTextarea(){
+        this.isi = jTextPane1.getText();
+        System.out.println(this.isi);
+    }
+    
+    public void cekIsi(int id, String matakuliah, int idSubab, String subab, int indexJCbox, int idStrukur, String struktur, String username) throws SQLException{
+//        Sqlconnection1841720105Hafidh sqlite = new Sqlconnection1841720105Hafidh();
+        Statement st = sqlite.getCon().createStatement();
+        String sql = ("SELECT * FROM isi;");
+        ResultSet rs = st.executeQuery(sql);
+        if(rs.next()) { 
+         String str1 = rs.getString("isi");
+            if (str1!=null) {
+                this.isiKosong = false;
+            }else{
+                this.isiKosong = true;
+            }
+        }
+        sqlite.connection().close();
+    }
+    
+    
+    public void insertIsi(int id, String matakuliah, int idSubab, String subab, int indexJCbox, int idStrukur, String struktur, String username) throws SQLException{
+        
+        sqlite.connection();
+        cekIdStruktur();
+//        cekIsi(id, matakuliah, idSubab, subab, indexJCbox, idStrukur, struktur, username);
+        if (this.isiKosong == true) {
+            System.out.println("inserting");
+            String sql ="INSERT INTO 'isi' ('namaStruktur', 'namaMK', 'username', 'namaSubab', 'isi') VALUES ('"+subab+"', '"+matakuliah+"', '"+username+"', '"+struktur+"', '"+jTextPane1.getText()+"');";
+            System.out.println(sql);
+            try {
+                sqlite.connection().execute(sql);
+            } catch (SQLException ex) {
+                Logger.getLogger(MataKuliahBackend.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            System.out.println("updateing......");
+            String sql ="UPDATE \"isi\" SET \"isi\" = '"+jTextPane1.getText()+"' WHERE \"idIsi\" = "+this.idIsi+";";
+            System.out.println(sql);
+            try {
+                sqlite.connection().execute(sql);
+            } catch (SQLException ex) {
+                Logger.getLogger(MataKuliahBackend.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+//        sqlite.connection().execute(sql);
+        
+    }
+    public void cekIdStruktur(){
+        String query = "select idIsi from isi where \"username\" = \""+this.username+"\" and \"namaMK\" = \""+this.matakuliah+"\" and \"namaSubab\" = \""+this.subabName+"\" and \"namaStruktur\" = \""+this.struktur+"\" ;";
+        System.out.println("cekidstrukutr method\n"+query);
+        ResultSet rs = Sqlconnection1841720105Hafidh.selectQuery(query);
+//        int id = 0;
+        try {
+            while (rs.next()) {
+                this.idIsi = rs.getInt("idIsi");
+                System.out.println("id"+this.idIsi);
+                this.isiKosong = false;
+//                System.out.println(cek);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InputISI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(this.isiKosong);
+        
+    }
+    
+
+    /**
+     * Creates new form MataKuliah
+     */
+    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanelAll = new javax.swing.JPanel();
+        jPanelTema = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        Message = new javax.swing.JLabel();
+        SaveButton = new java.awt.Button();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        BackButton = new java.awt.Button();
+        button1 = new java.awt.Button();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanelAll.setBackground(new java.awt.Color(153, 153, 153));
+
+        jPanelTema.setBackground(new java.awt.Color(0, 102, 153));
+        jPanelTema.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
+
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semilight", 1, 30)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("MarkCreator");
+
+        jLabel2.setFont(new java.awt.Font("Adobe Gothic Std B", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 89));
+        jLabel2.setText(" Pembuat Template Format Laporan ");
+
+        javax.swing.GroupLayout jPanelTemaLayout = new javax.swing.GroupLayout(jPanelTema);
+        jPanelTema.setLayout(jPanelTemaLayout);
+        jPanelTemaLayout.setHorizontalGroup(
+            jPanelTemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTemaLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanelTemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanelTemaLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel17)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelTemaLayout.setVerticalGroup(
+            jPanelTemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTemaLayout.createSequentialGroup()
+                .addGroup(jPanelTemaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelTemaLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(jPanelTemaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jLabel2)
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(3, 3, 3, 3, new java.awt.Color(255, 255, 255)));
+
+        jLabel4.setFont(new java.awt.Font("Adobe Gothic Std B", 1, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("ISI LAPORAN");
+
+        SaveButton.setActionCommand("Save");
+        SaveButton.setLabel("Save");
+        SaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveButtonActionPerformed(evt);
+            }
+        });
+
+        jTextPane1.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                jTextPane1InputMethodTextChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTextPane1);
+
+        BackButton.setLabel("Back");
+        BackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackButtonActionPerformed(evt);
+            }
+        });
+
+        button1.setLabel("button1");
+        button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Message, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addContainerGap(434, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(260, 260, 260)
+                                .addComponent(SaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(33, 33, 33)
+                    .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(686, Short.MAX_VALUE)))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Message, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addContainerGap(449, Short.MAX_VALUE)
+                    .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(40, 40, 40)))
+        );
+
+        javax.swing.GroupLayout jPanelAllLayout = new javax.swing.GroupLayout(jPanelAll);
+        jPanelAll.setLayout(jPanelAllLayout);
+        jPanelAllLayout.setHorizontalGroup(
+            jPanelAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelAllLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelTema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelAllLayout.setVerticalGroup(
+            jPanelAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelAllLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelTema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanelAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    
+    private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
+        // TODO add your handling code here:
+        String check = "";
+        check+=(this.id+"\n");
+        check+=(this.matakuliah+"\n");
+        check+=(this.idSubab+"\n");
+        check+=(this.subabName+"\n");
+        check+=(this.idStruktur+"\n");
+        check+=(this.struktur+"\n");
+        String query="";
+        sqlite.connection();
+        cekIdStruktur();
+        
+        query = "INSERT INTO \"isi\" (\"username\", \"namaMK\", \"namaStruktur\", \"namaSubab\", \"isi\") "
+                + "VALUES ('"+this.username+"', '"+this.matakuliah+"', '"+this.struktur+"', '"+this.subabName+"', '"+jTextPane1.getText()+"')";
+//        JOptionPane.showMessageDialog(null, query);
+        
+//        this.getTextarea();
+        
+        try {
+            this.insertIsi(this.id, this.matakuliah, this.idSubab, this.subabName, this.indexJCbox, this.idStruktur, this.struktur, this.username);
+            
+            //        DefaultListModel test = new DefaultListModel();
+            //        System.out.println(jCbox.getSelectedItem());
+            //
+            //        test.addElement("testing");
+            //
+            //        jListPilihan.setModel(test);
+            //        jListPilihan.addElement();
+            //        String tes = (String) jListPilihan.getSelectedValue();
+            //        System.out.println(tes);
+        } catch (SQLException ex) {
+            Logger.getLogger(InputISI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_SaveButtonActionPerformed
+
+    private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
+        // TODO add your handling code here:
+        MataKuliah mk = new MataKuliah(this.id, this.matakuliah, this.idSubab, this.subabName, this.indexJCbox, this.idStruktur, this.struktur, this.username);
+        mk.setInput(this.id, this.matakuliah, this.idSubab, this.subabName, this.indexJCbox, this.idStruktur, this.struktur, this.username);
+        mk.setVisible(true);
+        mk.setLocationRelativeTo(null);
+//        checking
+//        System.out.println("back button");
+//        System.out.println(this.id);
+//        System.out.println(this.matakuliah);
+//        System.out.println(this.subabName);
+//        System.out.println(this.struktur);
+//        System.out.println(this.username);
+        this.dispose();
+    }//GEN-LAST:event_BackButtonActionPerformed
+
+    private void jTextPane1InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextPane1InputMethodTextChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextPane1InputMethodTextChanged
+
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        // TODO add your handling code here:
+        cekIdStruktur();
+    }//GEN-LAST:event_button1ActionPerformed
+    DefaultListModel model = new DefaultListModel();        
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+                new InputISI().setVisible(true);
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    break;
+                }
+            }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Button BackButton;
+    private javax.swing.JLabel Message;
+    private java.awt.Button SaveButton;
+    private java.awt.Button button1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanelAll;
+    private javax.swing.JPanel jPanelTema;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane jTextPane1;
+    // End of variables declaration//GEN-END:variables
+}
